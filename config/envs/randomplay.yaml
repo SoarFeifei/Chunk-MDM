@@ -1,0 +1,12 @@
+env_module: "policy.envs.randomplay_env:RandomPlayEnv"
+env_name: "RandomPlayEnv"
+num_parallel: 1
+num_parallel_test: 1
+
+max_timestep: 5000
+frame_skip: 1
+
+block_size: 5
+overlap: 0
+
+#text: ['sidestep', 'forward', 'backward', 'stand still',',']

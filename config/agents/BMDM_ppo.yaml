@@ -1,0 +1,52 @@
+agent_name: "PPOWithPhysics"
+model_name: "PPO"
+
+clip_param: 0.2
+ppo_epoch: 20
+
+value_loss_coef: 1.0
+entropy_coef: 0.0
+use_gae: True
+gamma: 0.99
+gae_lambda: 0.95
+max_grad_norm: 0.5
+
+lr: 0.00002
+actor_lr: 0.00002
+critic_lr: 0.000006
+
+final_lr: 0.0000001
+eps: 0.00000001
+lr_decay_type: "exponential"
+mini_batch_size: 1024
+save_interval: 20
+actor_reg_weight: 1
+actor_bound_weight: 0.0
+
+distr_type: fixed
+distr_std: 0.5
+
+block_size: 5
+
+use_physics_constraints: true
+use_bmdm_integration: true
+physics_weight: 1.0
+bmdm_guide_weight: 0.5
+
+physics_constraints:
+  foot_slide_weight: 1.0
+  floating_weight: 1.0
+  ground_penetration_weight: 1.0
+  smoothness_weight: 0.1
+  contact_threshold: 0.05
+  slide_threshold: 0.02
+  ground_threshold: 0.0
+
+bmdm_explorer:
+  num_exploration_samples: 5
+  exploration_noise_scale: 0.1
+  use_best_of_n: true
+
+bmdm_guide:
+  guide_weight: 0.5
+  similarity_threshold: 0.8

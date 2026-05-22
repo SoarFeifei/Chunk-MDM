@@ -1,0 +1,12 @@
+--env_config config/envs/randomplay.yaml
+--model_config output/base/amdm_lafan1/config.yaml
+--model_path output/base/amdm_lafan1/_ep2280_B5_conds.pth
+--int_output_dir output/base/amdm_lafan1/
+
+--test_motion_file data/LAFAN1/run2_subject4.bvh
+--test_motion_index 100
+
+--device cuda:0
+--master_port 0
+--mode test
+--rand_seed 114510

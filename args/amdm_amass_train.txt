@@ -1,0 +1,9 @@
+--model_config config/model/amdm_amass.yaml
+--log_file output/amdm_amass/log.txt
+
+--int_output_dir output/amdm_amass/
+--out_model_file output/amdm_amass/model_param.pth
+
+--mode train
+--master_port 0
+--rand_seed 122

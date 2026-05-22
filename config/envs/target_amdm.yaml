@@ -1,0 +1,36 @@
+env_module: "policy.envs.target_env:TargetEnv"
+env_name: "TargetEnv"
+num_parallel: 64 # ## 512
+num_parallel_test: 50
+
+max_timestep: 240     # 300
+max_timestep_test: 2000
+frame_skip: 1
+
+#text: ['sidestep', 'forward', 'backward', 'stand still',',']
+
+#AMDM
+action_scale: 1.0 #0.95 during training 1.0
+random_scale: 1.0 # ## 1.0
+
+test_action_scale: 0.8
+test_random_scale: 1.0  # ##
+clip_scale: 2.5
+
+model_type: 'amdm'
+
+action_rgr_step: [4,2]  # [4,3,2]
+action_mode: 'full' #epsilon, locomotion
+action_step: [11,10,8,4,2]
+#action_step: [14,13,12,11,10,9,8,7,6,5,4,3,2]
+#action_step: [4,3,2]
+
+#HUMOR
+#action_scale: 3
+#model_type: 'humor'
+
+#mvae
+#action_scale: 8
+#model_type: 'mvae'
+
+block_size: 5

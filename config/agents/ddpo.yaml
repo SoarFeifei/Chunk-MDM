@@ -1,0 +1,62 @@
+agent_name: "DDPO"
+model_name: "AMDM"
+
+# DDPO核心参数
+ddpo:
+  # 优化器参数
+  lr: 0.000001  # 1e-6，较小的学习率以保持预训练知识
+  clip_param: 0.2  # PPO裁剪参数
+  ppo_epochs: 4  # 每次更新的PPO epoch数
+  mini_batch_size: 64  # mini-batch大小
+  
+  # 价值函数参数
+  value_loss_coef: 0.5
+  entropy_coef: 0.01
+  max_grad_norm: 1.0
+  
+  # GAE参数
+  gamma: 0.99
+  gae_lambda: 0.95
+  
+  # 训练参数
+  num_samples_per_epoch: 128  # 每个epoch收集的样本数
+  num_epochs: 1000  # 总训练epoch数 10000
+  save_interval: 100  # 保存间隔
+  
+  # 经验缓冲区
+  buffer_size: 1000
+  
+  # 去噪步骤配置
+  train_diffusion_steps: null  # null表示训练所有步骤，或指定如 [0, 1, 2, 3, 4, 5]
+  
+  # 采样配置
+  noise_scale: 1.0
+  clip_sample: true
+  clip_range: [-1.0, 1.0]
+  
+  # 奖励权重
+  reward:
+    physics_weight: 1.0  # 物理约束奖励权重
+    quality_weight: 0.1  # 生成质量奖励权重
+    diversity_weight: 0.1  # 多样性奖励权重
+  
+  # 测试配置
+  num_test_episodes: 10
+
+# 物理约束参数
+physics_constraints:
+  foot_slide_weight: 1.0  # 滑步惩罚权重  1.0
+  floating_weight: 0.0  # 悬空惩罚权重  1.0
+  ground_penetration_weight: 1.0  # 穿地惩罚权重
+  smoothness_weight: 0.0  # 平滑度奖励权重 0.1
+  
+#  contact_threshold: 0.05  # 接触地面阈值
+#  slide_threshold: 0.02  # 滑步阈值
+#  ground_threshold: 0.0  # 地面高度阈值
+
+# 块级配置（与BMDM模型一致）
+block_size: 5
+
+# 学习率衰减
+lr_decay_type: "constant"  # constant, linear, exponential
+final_lr: 0.0000001

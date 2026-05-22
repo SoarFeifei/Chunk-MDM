@@ -1,0 +1,11 @@
+--model_config output/base/amdm_100style/config.yaml
+--model_path output/base/amdm_100style/_ep2900.pth
+
+--agent_config output/target/amdm_100style/ppo.yaml
+--env_config output/target/amdm_100style/target_amdm.yaml
+--int_output_dir output/target/amdm_100style/
+--controller_path output/target/amdm_100style/_ep2980.pth
+
+--device cuda:0
+--mode test
+--master_port 0

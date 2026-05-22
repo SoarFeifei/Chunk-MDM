@@ -1,0 +1,10 @@
+--env_config config/envs/randomplay.yaml
+--model_config output/base/amdm_amass/config.yaml
+--model_path output/base/amdm_amass/_ep1050.pth
+--int_output_dir output/base/amdm_amass/
+
+--test_motion_file ../AMDM_origin/AMDM/data/AMASS/BioMotionLab_NTroje/rub001/0015_throwing_hard1_poses_283_frames_30_fps.npz
+--device cuda:0
+--master_port 0
+--rand_seed 114514
+--mode test

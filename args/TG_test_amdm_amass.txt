@@ -1,0 +1,11 @@
+--model_config output/base/amdm_amass/config.yaml
+--model_path output/base/amdm_amass/model_param.pth
+
+--agent_config output/target/amdm_amass/ppo.yaml
+--env_config output/target/amdm_amass/target_amdm.yaml
+--int_output_dir output/target/amdm_amass/
+--controller_path output/target/amdm_amass/_ep1640.pth
+
+--device cuda:0
+--mode test
+--master_port 0
