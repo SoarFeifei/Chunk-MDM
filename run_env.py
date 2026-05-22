@@ -102,33 +102,15 @@ def test_no_agent(env, valid_range):
         ref_clip = env.dataset.motion_flattened[0:int(120 / env.dataset.block_size) + 1]
         start_x = torch.from_numpy(ref_clip[0, :]).float().to(env.device)
         start_x = start_x.reshape(1, -1)
-        # start = time.time()
-        # test_data_long = env.model.eval_seq(start_x, conds, 1000, 1)    # b, n, f
-        # end = time.time()
-        # print(f"Block-AMDM generate {1000} frames in {end - start:.3f}s")
-        # print(f"FPS = {1000 / (end - start):.2f}")
-        # print(f"Speedup = {(1000 / (end - start)) / (1000 / (end - start)):.2f}x")
 
         ### to joint
         ref_clip = ref_clip.reshape(ref_clip.shape[0] * env.dataset.block_size, int(env.dataset.frame_dim / env.dataset.block_size))
-        # print("ref_clip", ref_clip.shape)   # ref_clip (60, 267)
-        # denorm_ref_clip = self.dataset.denorm_data(ref_clip).reshape(int(ref_clip.shape[0] / self.block_size),self.frame_dim * self.block_size)
         denorm_ref_clip = env.dataset.denorm_data(ref_clip)
         # print("denorm_ref_clip", denorm_ref_clip.shape)
         ref_clip = env.dataset.x_to_jnts(denorm_ref_clip, mode=env.dataset.data_component[0])[None, ...]
         sk_length = eval_util.extract_sk_lengths(LAFAN1_links, ref_clip)
         sk_length = sk_length[:, 0]
-        # std_per_bone = np.std(sk_length, axis=1)
-        # print("sk_length", sk_length.mean(), sk_length.max(), sk_length.min(), sk_length.shape)
-        # print("std_per_bone", std_per_bone)
 
-        # # print("test_data_long", test_data_long.shape)
-        # pred_long = test_data_long[0, :, :].detach().cpu().numpy()
-        # denorm_pred_long = env.dataset.denorm_data(copy.deepcopy(pred_long))
-        # # print("denorm_ref_clip", denorm_ref_clip.shape)
-        # pred_long = env.dataset.x_to_jnts(denorm_pred_long, mode=env.dataset.data_component[0])[None, ...]
-        # sk_length = eval_util.extract_sk_lengths(LAFAN1_links, pred_long)
-        # print("sk_length_pred", sk_length.mean(), sk_length.max(), sk_length.min())
 
     else:
         plot_traj_fn = env.dataset.plot_traj if hasattr(env.dataset, 'plot_traj') and callable(env.dataset.plot_traj) \
@@ -137,193 +119,22 @@ def test_no_agent(env, valid_range):
             env.dataset.plot_jnts) \
                 else vis_util.vis_skel
 
-        # normed_motion = env.dataset.load_new_data("../AMDM_origin/AMDM/data/AMASS/BioMotionLab_NTroje/rub036/0004_motorcycle_poses_93_frames_30_fps.npz")
-        # normed_motion = normed_motion.reshape(-1, 333)
-        # print("normed_motion", normed_motion.shape)
-        # cur_denormed_test_data = env.dataset.denorm_data(copy.deepcopy(normed_motion))
-        # cur_jnts = []
-        # for mode in env.dataset.data_component:
-        #     jnts_mode = env.dataset.x_to_jnts(cur_denormed_test_data, mode=mode)
-        #     cur_jnts.append(jnts_mode)
-        #
-        #     if mode == env.dataset.data_component[0]:
-        #         ### save npy
-        #         np.save('./output/base/amdm_amass/' + '_AMASS_348', jnts_mode.astype(np.float32))
-        # print("save 11111")
-        #
-        # st_idx = 100
-        # conds = None
-        # test_num = 50
-        # motion_length = 60
-        # ###
-        # if env.dataset.dataset_name == "LAFAN1":
-        #     # start_i = [0, 7344, 11288, 16205, 23551, 28292, 35625, 39557]
-        #     valid_range = np.array(valid_range)
-        #     print("valid_range", valid_range)
-        #     start_i = []
-        #     for i_f, (idx_st, idx_ed) in enumerate(valid_range):
-        #         start_i.append(idx_st)
-        #     result_ouput_dir = './output/base/amdm_lafan1'
-        # elif env.dataset.dataset_name == "STYLE100":
-        #     result_ouput_dir = './output/base/amdm_100style'
-        #     valid_range = np.array(valid_range)
-        #     print("valid_range", valid_range)
-        #     start_i = []
-        #     for i_f, (idx_st, idx_ed) in enumerate(valid_range):
-        #         start_i.append(idx_st)
-        # elif env.dataset.dataset_name == "AMASS":
-        #     result_ouput_dir = './output/base/amdm_amass'
-        #     valid_range = np.array(valid_range)
-        #     print("valid_range", valid_range)
-        #     start_i = []
-        #     for i_f, (idx_st, idx_ed) in enumerate(valid_range):
-        #         start_i.append(idx_st)
-        # foot_slide = bone_err = dist_mean = dist_min = dist_min_last = joint_acc = 0
-        # pen_freq = 0
-        # pen_dist = 0
-        # for i in range(len(start_i)):   # len(start_i)
-        #     st_idx = i * 100
-        #     # ref_clip = env.dataset.motion_flattened[0:int(120 / env.dataset.block_size) + 1]
-        #     ref_clip = env.dataset.motion_flattened[start_i[i] + 50:start_i[i] + int(motion_length/env.dataset.block_size) + 50 ]
-        #     # print("env.dataset.motion_flattened", env.dataset.motion_flattened.shape)
-        #     start_x = torch.from_numpy(ref_clip[0, :]).float().to(env.device)
-        #     start_x = start_x.reshape(1, -1)
-        #     test_data_long = env.model.eval_seq(start_x, conds, motion_length, test_num)
-        #
-        #     # start = time.time()
-        #     # test_data_long = env.model.eval_seq(start_x, conds, 60, 1)
-        #     # end = time.time()
-        #     # print(f"Block-AMDM generate {60} frames in {end - start:.3f}s")
-        #     # print(f"FPS = {1000 / (end - start):.2f}")
-        #     # print(f"Speedup = {(1000 / (end - start)) / (1000 / (end - start)):.2f}x")
-        #
-        #     ref_clip = ref_clip.reshape(ref_clip.shape[0] * env.dataset.block_size,
-        #                                 int(env.dataset.frame_dim / env.dataset.block_size))
-        #     denorm_ref_clip = env.dataset.denorm_data(ref_clip)
-        #     ref_clip = env.dataset.x_to_jnts(denorm_ref_clip, mode=env.dataset.data_component[0])[None, ...]
-        #     cur_jnts = []
-        #     for mode in env.dataset.data_component:
-        #         jnts_mode = env.dataset.x_to_jnts(denorm_ref_clip, mode=mode)
-        #         cur_jnts.append(jnts_mode)
-        #     cur_jnts = np.array(cur_jnts)
-        #     plot_jnts_fn(cur_jnts.squeeze(), result_ouput_dir + '/{}_ref'.format(st_idx))   ### gif
-        #     if env.dataset.dataset_name == "LAFAN1" or env.dataset.dataset_name == "STYLE100":
-        #         links = LAFAN1_links
-        #     elif env.dataset.dataset_name == "AMASS":
-        #         links = SMPL_links
-        #     sk_length = eval_util.extract_sk_lengths(links, ref_clip)
-        #     sk_length = sk_length[:, :1]
-        #
-        #     ### gif
-        #     test_data_long = test_data_long.detach().cpu().numpy()
-        #     test_out_long_lst = []
-        #     for j in range(test_data_long.shape[0]):
-        #         cur_denormed_test_data = env.dataset.denorm_data(copy.deepcopy(test_data_long[j]))
-        #         cur_jnts = []
-        #
-        #         for mode in env.dataset.data_component:
-        #             jnts_mode = env.dataset.x_to_jnts(cur_denormed_test_data, mode=mode)
-        #             cur_jnts.append(jnts_mode)
-        #
-        #             if mode == env.dataset.data_component[0]:
-        #                 test_out_long_lst.append(jnts_mode)
-        #                 ### save npy
-        #                 # if j == 0:
-        #                 #     np.save(result_ouput_dir + '/{}_SMPL_180'.format(st_idx), jnts_mode.astype(np.float32))
-        #
-        #         pred_long = test_data_long[j, :, :]  # .detach().cpu().numpy()
-        #         denorm_pred_long = env.dataset.denorm_data(copy.deepcopy(pred_long))
-        #         pred_long_jnts = env.dataset.x_to_jnts(denorm_pred_long, mode=env.dataset.data_component[0])[
-        #             None, ...]
-        #         pred_long_jnts = pred_long_jnts.squeeze(0)
-        #         # print("pred_long_jnts", pred_long_jnts.shape)     # (150, 22, 3)
-        #         sk_length_pred = eval_util.extract_sk_lengths(links, pred_long_jnts)
-        #         # print("sk_length_pred", sk_length_pred.mean(), sk_length_pred.max(), sk_length_pred.min())
-        #
-        #         bone_err_per_frame = np.abs(sk_length_pred - sk_length)  # [21,125]
-        #         # 平均 Bone Error
-        #         bone_err += bone_err_per_frame.mean() / test_num
-        #
-        #         # 穿地
-        #         if env.dataset.dataset_name == "LAFAN1":
-        #             foot_idx = [3, 4, 7, 8]
-        #         elif env.dataset.dataset_name == "STYLE100":
-        #             foot_idx = [17, 18, 21, 22]
-        #         elif env.dataset.dataset_name == "AMASS":
-        #             foot_idx = [7, 8, 10, 11]
-        #         contact_zs_mean, contact_event = eval_util.compute_ground_pen(foot_idx, pred_long_jnts, -0.03)
-        #         # print("contact_zs_mean contact_event", contact_zs_mean, contact_event)
-        #         pen_freq += contact_event / test_num
-        #         pen_dist += contact_zs_mean / test_num
-        #     #             jnts_mode_local = jnts_mode - jnts_mode[:, [0], :]
-        #     #     cur_jnts = np.array(cur_jnts)
-        #     #     plot_jnts_fn(cur_jnts.squeeze(), result_ouput_dir + '/{}_{}'.format(st_idx, i))
-        #     test_out_long_lst = np.array(test_out_long_lst)
-        #     plot_traj_fn(test_out_long_lst, result_ouput_dir + '/{}_long'.format(st_idx))
-        #
-        #     # print("test_data_long", test_data_long.shape)     # (1, 150, 267)
-        #
-        #     print("pen_freq pen_dist", pen_freq * 5, pen_dist * 5)
-        #
-        #     # 脚滑
-        #     foot_slide += eval_util.compute_foot_slide(foot_idx, test_out_long_lst)
-        #     print("foot_slide", foot_slide * 5)
-        #
-        #     print("bone_err", bone_err * 5)
-        #     # apd
-        #     dist_mean += eval_util.compute_apd(test_out_long_lst)
-        #     print("dist_mean", dist_mean * 5)
-        #     # ade
-        #     dist_min_i, dist_min_last_i, min_idx = eval_util.compute_ade(test_out_long_lst, ref_clip)
-        #     dist_min += dist_min_i
-        #     dist_min_last += dist_min_last_i
-        #     print("dist_min, dist_min_last", dist_min * 5, dist_min_last * 5)
-        #     # joint Acc
-        #     joint_acc += eval_util.compute_Acc(test_out_long_lst)
-        #     print("joint_acc", joint_acc * 5)
-
-        #     ### save npy
-        #     # if st_idx == 400 :#or st_idx == 600 :
-        #     #     print("st_idx:2 - 6")
-        #     #     denormed_min_data = env.dataset.denorm_data(copy.deepcopy(test_data_long[min_idx]))
-        #     #     min_jnts_mode = env.dataset.x_to_jnts(denormed_min_data, mode=mode)
-        #     #     np.save(result_ouput_dir + '/{}_SMPL_180'.format(st_idx), min_jnts_mode.astype(np.float32))
-        #     #
-        #     #     min_cur_jnts = []
-        #     #     for mode in env.dataset.data_component:
-        #     #         jnts_mode = env.dataset.x_to_jnts(denormed_min_data, mode=mode)
-        #     #         min_cur_jnts.append(jnts_mode)
-        #     #     min_cur_jnts = np.array(min_cur_jnts)
-        #     #     plot_jnts_fn(min_cur_jnts.squeeze(), result_ouput_dir + '/{}_pred_{}'.format(st_idx, min_idx))  ### gif
-        #     #
-        #     #     min_idx -= 4
-        #     #     denormed_min_data = env.dataset.denorm_data(copy.deepcopy(test_data_long[min_idx]))
-        #     #     min_jnts_mode = env.dataset.x_to_jnts(denormed_min_data, mode=mode)
-        #     #     np.save(result_ouput_dir + '/{}_SMPL_180_{}'.format(st_idx, min_idx), min_jnts_mode.astype(np.float32))
-        #     #
-        #     #     min_cur_jnts = []
-        #     #     for mode in env.dataset.data_component:
-        #     #         jnts_mode = env.dataset.x_to_jnts(denormed_min_data, mode=mode)
-        #     #         min_cur_jnts.append(jnts_mode)
-        #     #     min_cur_jnts = np.array(min_cur_jnts)
-        #     #     plot_jnts_fn(min_cur_jnts.squeeze(), result_ouput_dir + '/{}_pred_{}'.format(st_idx, min_idx))  ### gif
 
     env.reset()
     env.reset_initial_frames()
     ###
     traj = 'circle'
-    max_step = 0.06  # 单帧最大速度
+    max_step = 0.06  # 
     T_frame = 28
     if traj == 'circle':
-        radius = 6.0  # 圆半径
-        omega = 0.6  # 角速度（rad / step）
+        radius = 6.0  # 
+        omega = 0.6  # 
 
-        # 圆心（可以是固定点，也可以随 env 变化）
         # center = torch.zeros_like(env.root_xz)  # (B,2)，以原点为圆心
         center = env.root_xz.clone()
         center[:, 0] += radius
 
-        phi0 = torch.pi  # 起点在左侧
+        phi0 = torch.pi  # 
         phis = phi0 + omega * torch.arange(T_frame, device=env.device)
 
         x = center[:, 0] + radius * torch.cos(phis)
@@ -335,12 +146,9 @@ def test_no_agent(env, valid_range):
         amp = 1.0
         period = 40
         t = torch.arange(T_frame, device=env.device).float()
-        # 向前（沿 -z）
         z = -0.4 * t
-        # 左右摆动（x 方向）
         x = amp * torch.sin(2 * torch.pi * t / period)
         positions = torch.stack([x, z], dim=-1)
-        # 平移到起点
         positions = positions + env.root_xz
     elif traj == 'forward':
         t = torch.arange(T_frame, device=env.device).float()
@@ -617,7 +425,6 @@ def run(rank, num_procs, args):
 
         valid_range = list()
         ###
-        start_i = [0, 1468, 2256, 3239, 4708, 5656, 7122, 7908]
         generage_length = 2    ### 60 / 3
         if dataset.dataset_name == "LAFAN1":
             bvh_files = []
@@ -637,24 +444,10 @@ def run(rank, num_procs, args):
                 length = normed_motion.shape[0]
                 valid_range.append([total_len, total_len + length])
                 total_len += length
-            # normed_motion = dataset.load_new_data("data/LAFAN1/dance1_subject2.bvh")
-            # dataset.motion_flattened = np.concatenate([dataset.motion_flattened, normed_motion], axis=0)    # (2256, 1335)
-            # normed_motion = dataset.load_new_data("data/LAFAN1/fallAndGetUp2_subject3.bvh")
-            # dataset.motion_flattened = np.concatenate([dataset.motion_flattened, normed_motion], axis=0)    # (3239, 1335)
-            # normed_motion = dataset.load_new_data("data/LAFAN1/fight1_subject2.bvh")
-            # dataset.motion_flattened = np.concatenate([dataset.motion_flattened, normed_motion], axis=0)    # (4708, 1335)
-            # normed_motion = dataset.load_new_data("data/LAFAN1/ground1_subject4.bvh")
-            # dataset.motion_flattened = np.concatenate([dataset.motion_flattened, normed_motion], axis=0)    # (5656, 1335)
-            # normed_motion = dataset.load_new_data("data/LAFAN1/jumps1_subject2.bvh")
-            # dataset.motion_flattened = np.concatenate([dataset.motion_flattened, normed_motion], axis=0)    # (7122, 1335)
-            # normed_motion = dataset.load_new_data("data/LAFAN1/obstacles3_subject3.bvh")
-            # dataset.motion_flattened = np.concatenate([dataset.motion_flattened, normed_motion], axis=0)    # (7908, 1335)
-            # normed_motion = dataset.load_new_data("data/LAFAN1/walk1_subject5.bvh")
-            # dataset.motion_flattened = np.concatenate([dataset.motion_flattened, normed_motion], axis=0)    # (9475, 1335)
         elif dataset.dataset_name == "STYLE100":
             bvh_files = []
 
-            for root, dirs, files in os.walk('../AMDM_origin/AMDM/data/100STYLE'):
+            for root, dirs, files in os.walk('./data/100STYLE'):
                 for file in files:
                     if file.endswith('.bvh'):
                         full_path = os.path.join(root, file)
@@ -671,7 +464,7 @@ def run(rank, num_procs, args):
                 valid_range.append([total_len, total_len + length])
                 total_len += length
         elif dataset.dataset_name == "AMASS":
-            path = osp.join('../AMDM_origin/AMDM/data/AMASS', '**/*.{}'.format('npz'))
+            path = osp.join('./data/AMASS', '**/*.{}'.format('npz'))
             file_lst = glob.glob(path, recursive=True)
             random.seed(11451)
             selected_files = random.sample(file_lst, min(40, len(file_lst)))
